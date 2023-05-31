@@ -106,7 +106,7 @@ def set_eval(data_dir, saved_model,title,set_type):
 
 if __name__ == '__main__':
 
-    data_dirs = ["augments_group_3_1","augments_group_3_2","augments_group_3_3"]
+    data_dirs = ["augments_group_4_1","augments_group_4_2","augments_group_4_3"]
 
     for dir in data_dirs:
         data_dir = os.path.join("..", "data",dir,"val")
