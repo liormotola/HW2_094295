@@ -206,7 +206,7 @@ if __name__ == '__main__':
         [transforms.GaussianBlur(kernel_size=7, sigma=(0.1, 5)), transforms.RandomRotation(degrees=15)])
 
     create_datasets(original_dataset_path=original_dataset_path, dataset_names=names4,
-                    augmentation_transforms=[transforms.GaussianBlur(kernel_size=9, sigma=(0.1, 5)),add_noise,transforms.RandomRotation(degrees=15)],
+                    augmentation_transforms=[combined_augmentation,transforms.GaussianBlur(kernel_size=9, sigma=(0.1, 5)),add_noise,transforms.RandomRotation(degrees=15)],
                     flip_transforms=flip_transform,
                     together_transforms=[],
                     together_classes=[],
