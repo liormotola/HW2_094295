@@ -1,19 +1,8 @@
-import copy
 import os
-import time
-
-import matplotlib.pyplot as plt
-import numpy as np
 import torch
 import torch.nn as nn
-import torch.optim as optim
-import torchvision
-from torch.optim import lr_scheduler
 from torchvision import datasets, models, transforms
-from tqdm import tqdm
-import sys
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
-from sklearn.metrics import confusion_matrix, mean_squared_error
+from sklearn.metrics import confusion_matrix
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -22,6 +11,7 @@ np.random.seed(0)
 torch.manual_seed(0)
 BATCH_SIZE = 16
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
 
 def load_datasets(data_dir):
     """Loads and transforms the datasets."""
@@ -33,7 +23,15 @@ def load_datasets(data_dir):
 
     return dataset
 
+
 def load_model(saved_model, num_classes):
+    """
+    load a pretrained resnet50 model
+    @param: saved_model = path to the saved model
+    @param: num_classes = number of classes for the classification task.
+
+    @return: the loaded resnet50 model
+    """
     # Use a prebuilt pytorch's ResNet50 model
     model_ft = models.resnet50(pretrained=False)
 
@@ -45,25 +43,44 @@ def load_model(saved_model, num_classes):
 
     return model_ft
 
-def plot_confusion_mat(true_labels, predicted_labels,title,set_type):
+
+def plot_confusion_mat(true_labels, predicted_labels, title, set_type):
+    """
+    creates a confusion matrix plot and saves it to file.
+    @param: true_labels: list of true labels
+    @param: predicted_labels: list of labels predicted by the model
+    @param: title = plot's title
+    @param: type of evaluated dataset - train/val/test - will be added to the plot's title.
+    """
     conf_mat = confusion_matrix(true_labels, predicted_labels)
     ax = sns.heatmap(conf_mat, annot=True, fmt='d')
     plt.ylabel("True Values")
     plt.xlabel("Predicted Values")
-    ax.set_xticklabels( ['i', 'ii', 'iii', 'iv', 'ix', 'v', 'vi', 'vii', 'viii', 'x'])
+    ax.set_xticklabels(['i', 'ii', 'iii', 'iv', 'ix', 'v', 'vi', 'vii', 'viii', 'x'])
     ax.set_yticklabels(['i', 'ii', 'iii', 'iv', 'ix', 'v', 'vi', 'vii', 'viii', 'x'])
     plt.title(f"{title}-{set_type}")
     plt.savefig(f"{title} {set_type}-confusion matrix")
     plt.show()
 
-def set_eval(data_dir, saved_model,title,set_type):
+
+def set_eval(data_dir, saved_model, title, set_type):
+    """
+    evaluate model performance over a given dataset
+    plots overall accuracy + accuracy per class
+    creates a confusion matrix
+
+    @param: data_dir = path to the data directory
+    @param: saved_model = path to pretrained_model (pt file)
+    @param: title = title for the confusion matrix plot
+    @param: type of evaluated dataset - train/val/test - will be added to the plot.
+    """
 
     val_dataset = load_datasets(data_dir)
     print(f"test size: {len(val_dataset)}")
     class_names = val_dataset.classes
     print("The classes are: ", class_names)
     num_classes = len(class_names)
-    model_ft = load_model(saved_model,num_classes=num_classes)
+    model_ft = load_model(saved_model, num_classes=num_classes)
     model_ft.eval()
     val_dataloader = torch.utils.data.DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=True)
     num_correct = 0
@@ -104,19 +121,19 @@ def set_eval(data_dir, saved_model,title,set_type):
                        title=title,
                        set_type=set_type)
 
+
 if __name__ == '__main__':
 
     data_dirs = ["augments_group_5_1", "augments_group_5_2", "augments_group_5_3"]
 
     for dir in data_dirs:
-        data_dir = os.path.join("..", "data",dir,"val")
-        saved_model = os.path.join("..", "models",f"{dir}.pt")
+        data_dir = os.path.join("..", "data", dir, "val")
+        saved_model = os.path.join("..", "models", f"{dir}.pt")
         set_eval(data_dir=data_dir,
                  saved_model=saved_model,
-                 title=dir,set_type="validation")
+                 title=dir, set_type="validation")
 
-        test_dir =  os.path.join("..", "data","test")
+        test_dir = os.path.join("..", "data", "test")
         set_eval(data_dir=test_dir,
                  saved_model=saved_model,
                  title=dir, set_type="test")
-

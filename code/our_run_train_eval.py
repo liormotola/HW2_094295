@@ -1,7 +1,6 @@
 import copy
 import os
 import time
-
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
@@ -39,7 +38,6 @@ LR = 0.001
 
 
 base_dir = sys.argv[1]
-# base_dir = os.path.join("..", "data","new_train")
 train_dir = os.path.join(base_dir, "train")
 val_dir = os.path.join(base_dir, "val")
 model_name = sys.argv[2]
