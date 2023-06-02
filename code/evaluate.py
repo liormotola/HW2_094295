@@ -47,10 +47,11 @@ def load_model(saved_model, num_classes):
 
 def plot_confusion_mat(true_labels, predicted_labels,title,set_type):
     conf_mat = confusion_matrix(true_labels, predicted_labels)
-    # plt.imshow(conf_mat,interpolation='nearest', cmap=plt.cm.Blues)
-    sns.heatmap(conf_mat, annot=True, fmt='d')
+    ax = sns.heatmap(conf_mat, annot=True, fmt='d')
     plt.ylabel("True Values")
     plt.xlabel("Predicted Values")
+    ax.set_xticklabels( ['i', 'ii', 'iii', 'iv', 'ix', 'v', 'vi', 'vii', 'viii', 'x'])
+    ax.set_yticklabels(['i', 'ii', 'iii', 'iv', 'ix', 'v', 'vi', 'vii', 'viii', 'x'])
     plt.title(f"{title}-{set_type}")
     plt.savefig(f"{title} {set_type}-confusion matrix")
     plt.show()
@@ -69,7 +70,6 @@ def set_eval(data_dir, saved_model,title,set_type):
     num_total = 0
     class_correct = [0] * num_classes
     class_total = [0] * num_classes
-    # confusion = np.zeros((num_classes, num_classes))
     true_labels = []
     predicted_labels = []
 
@@ -106,7 +106,7 @@ def set_eval(data_dir, saved_model,title,set_type):
 
 if __name__ == '__main__':
 
-    data_dirs = ["augments_group_4_1","augments_group_4_2","augments_group_4_3"]
+    data_dirs = ["augments_group_5_1", "augments_group_5_2", "augments_group_5_3"]
 
     for dir in data_dirs:
         data_dir = os.path.join("..", "data",dir,"val")
