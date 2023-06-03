@@ -19,5 +19,3 @@ This Repository contains all code we used to perform our experiments.
     * `our_run_train_eval.py` - same code we were given to train and eval the model with minor changes. Number of epoches was reduced to 20. Expects to get 4 argumnets:<br>
         `python our_run_train_eval.py <path to data directory> <location to save the trained model> <location to save loss graph> <location to save accuracy graph>`
 
-
- </ul>
